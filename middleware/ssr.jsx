@@ -17,18 +17,14 @@ function Html({ children, scripts }) {
 
 /**
  * @param {import('vite').ViteDevServer} vite
+ * @param {import('react').ReactNode} Component
  * @return {import('express').RequestHandler}
  */
-export function ssrMiddleware(vite) {
+export function ssrMiddleware(vite, Component) {
   return async (req, res, next) => {
     res.set('content-type', 'text/html')
 
     const viteScriptsHtml = await vite.transformIndexHtml(req.url, ``)
-
-    // Import the React component we wish to render.
-    const Component = await vite
-      .ssrLoadModule('./src/main.jsx')
-      .then((mod) => mod.default)
 
     const { pipe } = renderToPipeableStream(
       <Html

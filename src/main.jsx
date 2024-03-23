@@ -1,5 +1,10 @@
-import { Button } from './button.jsx'
+import Button from './button.jsx'
 
 export default function Main() {
-  return <Button />
+  return (
+    <div>
+      <h1>Main</h1>
+      <Button />
+    </div>
+  )
 }

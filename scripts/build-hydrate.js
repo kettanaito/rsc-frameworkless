@@ -2,7 +2,7 @@ import { build } from 'esbuild'
 
 build({
   entryPoints: ['./lib/hydrate.js'],
-  outdir: './public',
+  outdir: './public/build',
   platform: 'browser',
   target: 'chrome180',
   format: 'esm',

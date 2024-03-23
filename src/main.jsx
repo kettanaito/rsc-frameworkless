@@ -1,9 +1,16 @@
 import Button from './button.jsx'
 
-export default function Main() {
+async function getData() {
+  return { name: 'John' }
+}
+
+export default async function Main() {
+  const json = await getData()
+
   return (
     <div>
-      <h1>Main</h1>
+      <h1>{json.name}</h1>
+      <p>This is a server component.</p>
       <Button />
     </div>
   )

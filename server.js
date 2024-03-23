@@ -25,8 +25,10 @@ async function startServer(modulePath) {
   // Load the SSR middleware via Vite
   // because it contains JSX.
   const { ssrMiddleware } = await vite.ssrLoadModule('./middleware/ssr.jsx')
+  const { rscMiddleware } = await vite.ssrLoadModule('./middleware/rsc.jsx')
 
-  app.get('/', ssrMiddleware(vite, Component))
+  // app.get('/', ssrMiddleware(vite, Component))
+  rscMiddleware(app, Component)
 
   app.listen(5173, () => {
     console.log('http://localhost:5173')

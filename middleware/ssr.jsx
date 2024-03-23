@@ -21,10 +21,10 @@ function Html({ children, scripts }) {
  * @return {import('express').RequestHandler}
  */
 export function ssrMiddleware(vite, Component) {
-  return async (req, res, next) => {
-    res.set('content-type', 'text/html')
+  return async (request, response, next) => {
+    response.set('content-type', 'text/html')
 
-    const viteScriptsHtml = await vite.transformIndexHtml(req.url, ``)
+    const viteScriptsHtml = await vite.transformIndexHtml(request.url, ``)
 
     const { pipe } = renderToPipeableStream(
       <Html
@@ -40,7 +40,11 @@ export function ssrMiddleware(vite, Component) {
           pipe(res)
         },
         onShellError(error) {
-          res.status(500).send(error.message)
+          console.log(error)
+          response.status(500).send('<h1>Failed to render</h1>')
+        },
+        onError(error) {
+          console.error(error)
         },
       },
     )

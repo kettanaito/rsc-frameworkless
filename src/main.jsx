@@ -1,5 +1,5 @@
 import { Button } from './button.jsx'
 
-export function Main() {
+export default function Main() {
   return <Button />
 }

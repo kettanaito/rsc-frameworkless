@@ -18,7 +18,7 @@ async function startServer() {
   // because it contains JSX.
   const { ssrMiddleware } = await vite.ssrLoadModule('./middleware/ssr.jsx')
 
-  app.use('*', ssrMiddleware(vite))
+  app.get('/', ssrMiddleware(vite))
 
   app.listen(5173, () => {
     console.log('http://localhost:5173')

@@ -1,3 +1,4 @@
+import 'server-only'
 import Button from './button.jsx'
 
 async function getData() {

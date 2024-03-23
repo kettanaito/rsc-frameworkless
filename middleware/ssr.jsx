@@ -1,24 +1,44 @@
-import fs from 'node:fs'
-import { renderToString } from 'react-dom/server'
+import { renderToPipeableStream } from 'react-dom/server'
 
+function Html({ children }) {
+  return (
+    <html>
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>RSC</title>
+      </head>
+      <body>{children}</body>
+    </html>
+  )
+}
+
+/**
+ * @param {import('vite').ViteDevServer} vite
+ * @return {import('express').RequestHandler}
+ */
 export function ssrMiddleware(vite) {
   return async (req, res, next) => {
-    // Transform the index.html with Vite
-    // so it adds its HMR and other goods.
-    const template = await vite.transformIndexHtml(
-      req.url,
-      fs.readFileSync('./public/index.html', 'utf8'),
-    )
+    res.set('content-type', 'text/html')
 
     // Import the React component we wish to render.
     const Component = await vite
       .ssrLoadModule('./src/main.jsx')
       .then((mod) => mod.default)
 
-    const componentHtml = renderToString(<Component />)
-    const html = template.replace(`<!-- component -->`, componentHtml)
-
-    res.set('content-type', 'text/html').send(html)
+    const { pipe } = renderToPipeableStream(
+      <Html>
+        <Component />
+      </Html>,
+      {
+        onShellReady() {
+          pipe(res)
+        },
+        onShellError(error) {
+          res.status(500).send(error.message)
+        },
+      },
+    )
 
     return next()
   }
